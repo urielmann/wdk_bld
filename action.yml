@@ -1,0 +1,6 @@
+name: 'wdk-bld'
+description: 'Build Windows Driver with Microsoft WDK'
+inputs:
+  version:
+    description: 'WDK version'
+    default: latest
