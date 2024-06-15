@@ -1,6 +1,37 @@
 name: 'wdk-bld'
 description: 'Build Windows Driver with Microsoft WDK'
 inputs:
+
   version:
     description: 'WDK version'
     default: latest
+
+  arch:
+    description: WDK architecture to build
+    matrix: [x86, x64, amd64, x86_amd64, x86_x64, x86_arm, x86_arm64, amd64_x86, x64_x86, amd64_arm, x64_arm, amd64_arm64, x64_arm64]
+    default: x64
+
+  spectre:
+    description: Enable Spectre mitigations
+    default: true
+
+  toolset:
+    description: VC++ compiler toolset version
+
+  vs_ver:
+    description: The Visual Studio version to use. This can be the version number (e.g. 16.0 for 2019) or the year (e.g. "2019").
+    matrix: [2019, 2022]
+    default: 2022
+
+runs:
+  using: composite
+  steps:
+    - name: Find VS environment
+      shell: pwsh
+      run: |
+        $out = Get-ChildItem -Recurse -Path "C:\Program Files (x86)\Microsoft Visual Studio\$env:INPUTS_VS_VER\vcvarsall.bat"
+        Write-Output $out.FullName
+
+branding:
+  icon: terminal
+  color: yellow
