@@ -35,7 +35,7 @@ project(wdk_bld
     endif(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 
     # Global variables
-    set(WDK_DIR "C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0")
+    set(WDK_DIR "C:/Program Files (x86)/Windows Kits/10/bin/$ENV{WDK_VER}")
     set(TRACEWPP "${WDK_DIR}/$ENV{Platform}/tracewpp.exe")
     file(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}" NT_CMAKE_SOURCE_DIR)
 

@@ -1,22 +1,54 @@
+#
+# @file wdk_bld/action.yml
+# @brief GitHub Actions configuration
+#
+# @copyright (C) 2024 Uriel Mann (abba.mann@gmail.com)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sub-license, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 name: 'wdk-bld'
 description: 'Build Windows Driver with Microsoft WDK'
 inputs:
 
-  version:
-    description: 'WDK version'
-    default: latest
-
   arch:
     description: WDK architecture to build
-    matrix: [x86, x64, amd64, x86_amd64, x86_x64, x86_arm, x86_arm64, amd64_x86, x64_x86, amd64_arm, x64_arm, amd64_arm64, x64_arm64]
-    default: x64
+    matrix: ['x86', 'x64', 'amd64', 'x86_amd64', 'x86_x64', 'x86_arm', 'x86_arm64', 'amd64_x86', 'x64_x86', 'amd64_arm', 'x64_arm', 'amd64_arm64', 'x64_arm64']
+    default: 'x64'
+
+  plat_type:
+    description: 'Build platform'
+    matrix: ['store', 'uwp']
+
+  wdk_ver:
+    description: 'WDK version'
+    matrix: ['8.1', '10.0.16299.0', '10.0.17134.0', '10.0.17134.0', '10.0.17763.0', '10.0.18362.0', '10.0.19041.0', '10.0.20348.0', '10.0.22000.0', '10.0.22621.0']
+    default: '10.0.22621.0'
 
   spectre:
     description: Enable Spectre mitigations
-    default: true
+    matrix: ['-vcvars_spectre_libs=""', '-vcvars_spectre_libs=spectre']
+    default: '-vcvars_spectre_libs=spectre'
 
   toolset:
     description: VC++ compiler toolset version
+    matrix: ['-vcvars_ver=14.0']
+    default: '-vcvars_ver=14.0'
 
   vs_ver:
     description: The Visual Studio version to use. This can be the version number (e.g. 16.0 for 2019) or the year (e.g. "2019").
@@ -26,11 +58,19 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Find VS environment
+    - name: Find Visual Studio shell setup
+      id: Discover
       shell: pwsh
       run: |
-        $out = Get-ChildItem -Recurse -Path "C:\Program Files (x86)\Microsoft Visual Studio\$env:INPUTS_VS_VER\vcvarsall.bat"
-        Write-Output $out.FullName
+        Write-Output "scr/setup.ps1 ${{inputs.vs_ver}} ${{ inputs.arch }} ${{inputs.wdk_ver}} ${{inputs.toolset}} ${{inputs.spectre}} ${{inputs.plat_type}}"
+        scr/setup.ps1 ${{inputs.vs_ver}} ${{ inputs.arch }} ${{inputs.wdk_ver}} ${{inputs.toolset}} ${{inputs.spectre}} ${{inputs.plat_type}}
+      env:
+          ARCH: ${{ inputs.arch }}
+          VS_VER: ${{ inputs.vs_ver }}
+          WDK_VER: ${{ inputs.wdk_ver }}
+          TOOLSET: ${{ inputs.toolset }}
+          SPECTRE: ${{ inputs.spectre }}
+          PLAT_TYPE: ${{ inputs.plat_type }}
 
 branding:
   icon: terminal
