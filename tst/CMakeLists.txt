@@ -85,7 +85,40 @@ project(drv CXX)
             WINNT=1
             NTDDI_VERSION=0x0A000008
         )
-    target_compile_options(${PROJECT_NAME} PRIVATE @${PROJECT_SOURCE_DIR}/cl.rsp)
+    target_compile_options(${PROJECT_NAME} PRIVATE
+            /kernel
+            /Zi
+            /W4
+            /WX
+            /Od
+            /GF
+            /Gm-
+            /Zp8
+            /GS
+            /Gy
+            /GR-
+            /FC
+            /fp:precise
+            /Qspectre
+            /Zc:wchar_t
+            /Zc:forScope
+            /guard:cf
+            /Zc:inline
+            /std:c++20
+            /external:W4
+            /wd4748
+            /wd4603
+            /wd4627
+            /wd4986
+            /wd4987
+            /Zc:strictStrings-
+            /cbstring
+            /d2epilogunwind
+            /d1import_no_registry
+            /d2AllowCompatibleILVersions
+            /d2Zi+
+            "/FIC:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/Shared/warning.h"
+        )
     target_include_directories(${PROJECT_NAME} PRIVATE
             "C:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/km"
             ${PROJECT_BINARY_DIR}
@@ -96,11 +129,38 @@ project(drv CXX)
             /MAP:${PROJECT_BINARY_DIR}/drv.map
             /IMPLIB:${PROJECT_BINARY_DIR}/drv.lib
             "/LIBPATH:C:/Program Files (x86)/Windows Kits/10/Lib/10.0.19041.0/km/$ENV{Platform}"
-            @${PROJECT_SOURCE_DIR}/link.rsp
+            /kernel
+            /Driver
+            /VERSION:10.0
+            /INCREMENTAL:NO
+            /SECTION:INIT,d
+            /NODEFAULTLIB
+            /MANIFEST:NO
+            /DEBUG:FULL
+            /SUBSYSTEM:NATIVE,10.00
+            /OPT:REF
+            /OPT:ICF
+            /ENTRY:GsDriverEntry
+            /MERGE:_TEXT=.text
+            /MERGE:_PAGE=PAGE
+            /MACHINE:X64
+            /PROFILE
+            /guard:cf
+            /WX
+            /IGNORE:4198,4010,4037,4039,4065,4070,4078,4087,4089,4221,4108,4088,4218,4218,4235
+            /osversion:10.0
+            /pdbcompress
+            /debugtype:pdata
+            /NODEFAULTLIB
         )
 
     # Remove default libraries
-    target_link_libraries(${PROJECT_NAME} PRIVATE "")
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            bufferoverflowfastfailk.lib
+            ntoskrnl.lib
+            hal.lib
+            wmilib.lib
+        )
     target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
 
     add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_wpp)

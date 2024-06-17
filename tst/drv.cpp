@@ -49,7 +49,7 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject,
 
 void NTAPI DriverUnload(PDRIVER_OBJECT DriverObject)
 {
-    TraceInformationDrv(L"Filter unloaded\n");
+    TraceInformation(L"Driver unloaded");
 
     WPP_CLEANUP(DriverObject);
 }
@@ -62,6 +62,7 @@ NTSTATUS NTAPI DriverEntry(_In_ PDRIVER_OBJECT DriverObject,
 {
     WPP_INIT_TRACING(DriverObject, RegistryPath);
     DriverObject->DriverUnload = &DriverUnload;
+    TraceInformation(L"Entering %wZ", RegistryPath);
     return STATUS_SUCCESS;
 }
 
