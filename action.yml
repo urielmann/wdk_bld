@@ -58,14 +58,19 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Find VS environment
+    - name: Download WDK (${{inputs.version}})
       shell: pwsh
       run: |
-        # Install WDK (${{inputs.version}})
         Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/?linkid=2128854 -OutFile $env:TEMP\wdksetup.exe
+
+    - name: Install WDK (${{inputs.version}})
+      shell: pwsh
+      run: |
         Start-Process $env:TEMP\wdksetup.exe -ArgumentList '/silent' -Wait
 
-        # Find Visual Studio shell setup
+    - name: Find Visual Studio shell setup
+      shell: pwsh
+      run: |
         $out = Get-ChildItem -Recurse -Path "C:\Program Files (x86)\Microsoft Visual Studio\${{inputs.vs_ver}}\vcvarsall.bat"
         if ($out -Eq "") {
           Write-Error "Unable to set build environment"
@@ -78,6 +83,11 @@ runs:
           Write-Error "Error running '$out'"
           exit 1
         }
+
+        # Show environment
+        Get-ChildItem env:
+
+        echo "setup=$out" >> $env:GITHUB_OUTPUT
 
 branding:
   icon: terminal
