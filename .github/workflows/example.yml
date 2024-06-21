@@ -1,0 +1,27 @@
+name: Example Workflow
+
+on: [push]
+
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run PowerShell action
+        id: powershell-action
+        uses: ./custom-actions/powershell-action
+        with:
+          my-input: "Hello from GitHub Actions!"
+
+      - name: Set environment variable
+        run: echo "MY_VAR=${{ steps.powershell-action.outputs.my-output }}" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Use environment variable
+        run: echo "The environment variable MY_VAR is $MY_VAR"
+        shell: bash
+        env:
+          MY_VAR: ${{ steps.powershell-action.outputs.my-output }}

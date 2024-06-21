@@ -1,0 +1,22 @@
+name: "PowerShell Action"
+description: "An action that processes input and outputs a value"
+inputs:
+  my-input:
+    description: "Input to the action"
+    required: true
+    default: "default value"
+outputs:
+  my-output:
+    description: "Processed output value"
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        param (
+            [string]$input = '${{ inputs.my-input }}'
+        )
+        $output = "Processed $input"
+        echo "my-output=$output" >> $env:GITHUB_OUTPUT
+      shell: pwsh
+      with:
+        my-input: ${{ inputs.my-input }}

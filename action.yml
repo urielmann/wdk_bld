@@ -88,6 +88,12 @@ runs:
         Get-ChildItem env:
 
         echo "setup=$out" >> $env:GITHUB_OUTPUT
+        outputs:
+          wdk-cmd: 
+    outputs:
+      random-number: # Define the output name
+        description: 'The generated random number'
+        value: ${{ steps.set-random-number.outputs.random-number }}
 
 branding:
   icon: terminal
