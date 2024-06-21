@@ -8,10 +8,18 @@ inputs:
 outputs:
   my-output:
     description: "The output value"
+    value: ${{ steps.powershell-action.outputs.my-output }}
 runs:
   using: "composite"
   steps:
-    - run: |
+    - name: "Action: Set Greeting"
+      run: Write-Output "Hello $env:INPUT_WHO_TO_GREET."
+      shell: pwsh
+      env:
+        INPUT_WHO_TO_GREET: ${{ inputs.my-input }}
+    - name: "Action: PowerShell Action"
+      id: powershell-action
+      run: |
         $input = '${{ inputs.my-input }}'
         $output = "Processed $input"
         Write-Output "Input: ${input}, Output: ${output}, GITHUB_ENV: $env:GITHUB_ENV"
