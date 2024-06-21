@@ -24,5 +24,7 @@ jobs:
 
       - name: Use environment variable in pwsh
         run: |
-          Write-Output "The environment variable MY_VAR is $env:MY_VAR"
+          Write-Output "The environment variable MY_VAR is $MY_VAR"
+          Write-Output "The environment variable env:MY_VAR is $env:MY_VAR"
+          Get-Content -Path $env:GITHUB_ENV
         shell: pwsh
