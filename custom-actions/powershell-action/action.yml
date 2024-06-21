@@ -1,5 +1,5 @@
 name: "PowerShell Action"
-description: "An action that processes input and outputs a value"
+description: "An action that outputs a value from PowerShell"
 inputs:
   my-input:
     description: "Input to the action"
@@ -7,13 +7,12 @@ inputs:
     default: "default value"
 outputs:
   my-output:
-    description: "Processed output value"
+    description: "The output value"
 runs:
   using: "composite"
   steps:
     - run: |
         $input = '${{ inputs.my-input }}'
-        Write-Output "Input: ${input}"
         $output = "Processed $input"
         Write-Output "Input: ${input}, Output: ${output}"
         echo "my-output=$output" >> $env:GITHUB_OUTPUT
