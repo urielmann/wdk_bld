@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   example-job:
-    runs-on: windows-latest  # Use a Windows runner
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -18,13 +18,12 @@ jobs:
 
       - name: Set environment variable using pwsh
         run: |
-          echo "Setting environment variable in pwsh"
-          echo "MY_VAR=${{ steps.powershell-action.outputs.my-output }}" | Out-File -FilePath $env:GITHUB_ENV -Append
+          Write-Output "Setting environment variable in pwsh"
+          "MY_VAR=${{ steps.powershell-action.outputs.my-output }}" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
       - name: Use environment variable in pwsh
         run: |
-          Write-Output "The environment variable MY_VAR is $MY_VAR"
-          Write-Output "The environment variable env:MY_VAR is $env:MY_VAR"
-          Get-Content -Path $env:GITHUB_ENV
+          Write-Output "The environment variable MY_VAR is $env:MY_VAR"
+          Write-Output "The output is: ${{ steps.powershell-action.outputs.my-output }}"
         shell: pwsh

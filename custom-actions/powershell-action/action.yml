@@ -15,5 +15,5 @@ runs:
         $input = '${{ inputs.my-input }}'
         $output = "Processed $input"
         Write-Output "Input: ${input}, Output: ${output}"
-        echo "my-output=$output" >> $env:GITHUB_OUTPUT
+        echo "my-output=$output" | Out-File -FilePath $env:GITHUB_ENV -Append
       shell: pwsh
