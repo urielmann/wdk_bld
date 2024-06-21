@@ -21,7 +21,7 @@ jobs:
         shell: bash
 
       - name: Use environment variable
-        run: echo "The environment variable MY_VAR is $MY_VAR"
+        run: echo "The environment variable MY_VAR is $env:MY_VAR"
         shell: bash
         env:
           MY_VAR: ${{ steps.powershell-action.outputs.my-output }}

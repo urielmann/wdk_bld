@@ -12,11 +12,9 @@ runs:
   using: "composite"
   steps:
     - run: |
-        param (
-            [string]$input = '${{ inputs.my-input }}'
-        )
+        $input = '${{ inputs.my-input }}'
+        Write-Output "Input: ${input}"
         $output = "Processed $input"
+        Write-Output "Input: ${input}, Output: ${output}"
         echo "my-output=$output" >> $env:GITHUB_OUTPUT
       shell: pwsh
-      with:
-        my-input: ${{ inputs.my-input }}
