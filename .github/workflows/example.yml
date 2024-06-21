@@ -12,7 +12,7 @@ jobs:
 
       - name: Run PowerShell action
         id: powershell-action
-        uses: ./custom-actions/powershell-action
+        uses: urielmann/wdk_bld/custom-actions/powershell-action@Add-outputs
         with:
           my-input: "Hello from GitHub Actions!"
 
