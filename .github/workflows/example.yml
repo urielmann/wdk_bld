@@ -10,19 +10,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run PowerShell action
+      - name: "Workflow: Run PowerShell action"
         id: powershell-action
         uses: ./custom-actions/powershell-action
         with:
           my-input: "Hello from GitHub Actions!"
 
-      - name: Set environment variable using pwsh
+      - name: "Workflow: Set environment variable using pwsh"
         run: |
-          Write-Output "Setting environment variable in pwsh"
+          Write-Output "Setting environment variable in pwsh, env:GITHUB_ENV: $env:GITHUB_ENV, output: ${{ steps.powershell-action.outputs.my-output }}"
           "MY_VAR=${{ steps.powershell-action.outputs.my-output }}" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
-      - name: Use environment variable in pwsh
+      - name: "Workflow: Use environment variable in pwsh"
         run: |
           Write-Output "The environment variable MY_VAR is $env:MY_VAR"
           Write-Output "The output is: ${{ steps.powershell-action.outputs.my-output }}"

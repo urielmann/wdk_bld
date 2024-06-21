@@ -1,4 +1,4 @@
-name: "PowerShell Action"
+name: "Action: PowerShell Action"
 description: "An action that outputs a value from PowerShell"
 inputs:
   my-input:
@@ -14,6 +14,6 @@ runs:
     - run: |
         $input = '${{ inputs.my-input }}'
         $output = "Processed $input"
-        Write-Output "Input: ${input}, Output: ${output}"
+        Write-Output "Input: ${input}, Output: ${output}, GITHUB_ENV: $env:GITHUB_ENV"
         echo "my-output=$output" | Out-File -FilePath $env:GITHUB_ENV -Append
       shell: pwsh
